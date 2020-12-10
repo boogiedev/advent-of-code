@@ -92,12 +92,58 @@ day_2_input = get_day_input(2)
 
 def d2p1(password_report) -> int:
     '''
-
+    Takes in a list of passwords and their policies, cleans strings then evaluates if password is valid
     '''
-    pass
+    cnt = 0
+    for req in password_report:
+        req_split = req.split()
 
-print(day_2_input)
+        # hard code
+        x, y = (int(x) for x in req_split[0].split('-'))
+        req_range = range(x, y + 1)
+        char = req_split[1][0]
+        ipt = req_split[2]
+
+        char_cnt = ipt.count(char)
+        cnt += 1 if char_cnt in req_range else 0
+
+    return cnt
+
+
+day_2_test = [
+'1-3 a: abcde',
+'1-3 b: cdefg',
+'2-9 c: ccccccccc'
+]
+
 # Test
 # print(d2p1(day_2_test))
 # Validate
 # print(d2p1(day_2_input))
+
+
+'''
+--- Day 2 Part 2: Password Philosophy ---
+'''
+def d2p2(password_report) -> int:
+    '''
+    Each policy actually describes two positions in the password, where 1 means the first character, 2 means the second character, and so on. (Be careful; Toboggan Corporate Policies have no concept of "index zero"!) Exactly one of these positions must contain the given letter. Other occurrences of the letter are irrelevant for the purposes of policy enforcement.
+    '''
+    cnt = 0
+    for req in password_report:
+        req_split = req.split()
+
+        # hard code
+        pos = (int(x) for x in req_split[0].split('-'))
+        char = req_split[1][0]
+        ipt = req_split[2]
+
+        r = [char == ipt[i - 1] for i in pos]
+        cnt += 1 if sum(r) == 1 else 0
+
+    return cnt
+
+# Test
+# print(d2p2(day_2_test))
+# Validate
+print(d2p2(day_2_input))
