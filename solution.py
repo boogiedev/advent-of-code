@@ -3,7 +3,7 @@ from collections import Counter
 from functools import reduce
 
 # Global Functions
-def get_day_input(day:int, cast:type=None, strip:bool=True) -> list:
+def get_day_input(day:int, cast:type=None, strip:bool=True, split_by:str=None) -> list:
     '''
     Returns list of input values from reading day specific text file
     '''
@@ -11,7 +11,10 @@ def get_day_input(day:int, cast:type=None, strip:bool=True) -> list:
     path = f"./inputs/day_{day}.txt"
     try:
         with open(path, 'r') as file:
-            data = file.readlines()
+            if not split_by:
+                data = file.readlines()
+            else:
+                data = file.read().split(split_by)
             for raw in data:
                 clean = raw
                 if strip:
@@ -231,4 +234,52 @@ def d3p2(toboggan_map:list, slopes:list=[{'r':1,'d':1}, {'r':3,'d':1}, {'r':5,'d
 # Test
 # print(d3p2(day_3_test))
 # Validate
-print(d3p2(day_3_input))
+# print(d3p2(day_3_input))
+
+
+day_4_input = get_day_input(4, split_by='\n\n')
+passport_fields = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid', 'cid'}
+'''
+--- Day 4 Part 1: Passport Processing ---
+'''
+
+def d4p1(passport_data:list, required:set={'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}) -> int:
+    '''
+    The automatic passport scanners are slow because they're having trouble detecting which passports have all required fields. The expected fields are as follows:
+
+    byr (Birth Year)
+    iyr (Issue Year)
+    eyr (Expiration Year)
+    hgt (Height)
+    hcl (Hair Color)
+    ecl (Eye Color)
+    pid (Passport ID)
+    cid (Country ID)
+    '''
+    cnt = 0
+    passport_dict = [dict(map(lambda x: x.split(':'), data.split())) for data in passport_data]
+    for passport in passport_dict:
+        if all(passport.get(key, False) for key in required):
+            cnt += 1
+    return cnt
+
+
+
+day_4_test = '''ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+byr:1937 iyr:2017 cid:147 hgt:183cm
+
+iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+hcl:#cfa07d byr:1929
+
+hcl:#ae17e1 iyr:2013
+eyr:2024
+ecl:brn pid:760753108 byr:1931
+hgt:179cm
+
+hcl:#cfa07d eyr:2025 pid:166559648
+iyr:2011 ecl:brn hgt:59in'''.split('\n\n')
+
+# Test
+print(d4p1(day_4_test))
+# Validate
+print(d4p1(day_4_input))
