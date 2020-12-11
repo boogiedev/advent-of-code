@@ -1,5 +1,6 @@
 # Imports
 from collections import Counter
+from functools import reduce
 
 # Global Functions
 def get_day_input(day:int, cast:type=None, strip:bool=True) -> list:
@@ -201,4 +202,33 @@ day_3_test = '''..##.........##.........##.........##.........##.........##.....
 # Test
 # print(d3p1(day_3_test))
 # Validate
-print(d3p1(day_3_input))
+# print(d3p1(day_3_input))
+
+
+'''
+--- Day 3 Part 2: Toboggan Trajectory ---
+'''
+
+def d3p2(toboggan_map:list, slopes:list=[{'r':1,'d':1}, {'r':3,'d':1}, {'r':5,'d':1}, {'r':7,'d':1}, {'r':1,'d':2}]) -> int:
+    '''
+    Time to check the rest of the slopes - you need to minimize the probability of a sudden arboreal stop, after all.
+
+    Determine the number of trees you would encounter if, for each of the following slopes, you start at the top-left corner and traverse the map all the way to the bottom:
+
+    Right 1, down 1.
+    Right 3, down 1. (This is the slope you already checked.)
+    Right 5, down 1.
+    Right 7, down 1.
+    Right 1, down 2.
+    '''
+    if type(toboggan_map) == str:
+        toboggan_map = toboggan_map.split()
+
+    trees = reduce(lambda x, y: x * y, [d3p1(toboggan_map, **slope) for slope in slopes])
+
+    return trees
+
+# Test
+# print(d3p2(day_3_test))
+# Validate
+print(d3p2(day_3_input))
