@@ -1,6 +1,8 @@
 # Imports
 from collections import Counter
 from functools import reduce
+import re
+
 
 # Global Functions
 def get_day_input(day:int, cast:type=None, strip:bool=True, split_by:str=None) -> list:
@@ -243,7 +245,7 @@ passport_fields = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid', 'cid'}
 --- Day 4 Part 1: Passport Processing ---
 '''
 
-def d4p1(passport_data:list, required:set={'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}) -> int:
+def d4p1(passport_data:list, required:set={'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}, process_single:bool=False) -> int:
     '''
     The automatic passport scanners are slow because they're having trouble detecting which passports have all required fields. The expected fields are as follows:
 
@@ -256,12 +258,18 @@ def d4p1(passport_data:list, required:set={'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'e
     pid (Passport ID)
     cid (Country ID)
     '''
-    cnt = 0
-    passport_dict = [dict(map(lambda x: x.split(':'), data.split())) for data in passport_data]
-    for passport in passport_dict:
-        if all(passport.get(key, False) for key in required):
-            cnt += 1
-    return cnt
+    res = None
+    if process_single:
+        data = dict(map(lambda x: x.split(':'), passport_data.split()))
+        if all(data.get(key, False) for key in required):
+            res = data
+    else:
+        res = 0
+        passport_dict = [dict(map(lambda x: x.split(':'), data.split())) for data in passport_data]
+        for passport in passport_dict:
+            if all(passport.get(key, False) for key in required):
+                res += 1
+    return res
 
 
 
@@ -280,6 +288,55 @@ hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in'''.split('\n\n')
 
 # Test
-print(d4p1(day_4_test))
+# print(d4p1(day_4_test))
 # Validate
-print(d4p1(day_4_input))
+# print(d4p1(day_4_input))
+
+
+
+requirement = {
+    'byr' : lambda b: int(b) in range(1920, 2002 + 1),
+    'iyr' : lambda i: int(i) in range(2010, 2020 + 1),
+    'eyr' : lambda e: int(e) in range(2020, 2030 + 1),
+    'hgt' : lambda n: int(''.join(filter(str.isdigit, n))) in range(150, 193 + 1) if 'cm' in n else int(''.join(filter(str.isdigit, n))) in range(59, 76 + 1),
+    'hcl' : lambda h: bool(re.compile("^#[a-f0-9]+").fullmatch(h)),
+    'ecl' : lambda c: c.strip() in {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'},
+    'pid' : lambda p: len("".join(filter(str.isdigit, p))) == 9
+}
+'''
+--- Day 4 Part 2: Passport Processing ---
+'''
+
+def d4p2(passport_data:list, requirements:dict=requirement) -> int:
+    '''
+    The line is moving more quickly now, but you overhear airport security talking about how passports with invalid data are getting through. Better add some data validation, quick!
+
+    You can continue to ignore the cid field, but each other field has strict rules about what values are valid for automatic validation:
+
+    byr (Birth Year) - four digits; at least 1920 and at most 2002.
+    iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+    eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+    hgt (Height) - a number followed by either cm or in:
+    If cm, the number must be at least 150 and at most 193.
+    If in, the number must be at least 59 and at most 76.
+    hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+    ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+    pid (Passport ID) - a nine-digit number, including leading zeroes.
+    cid (Country ID) - ignored, missing or not.
+    Your job is to count the passports where all required fields are both present and valid according to the above rules. Here are some example values:
+    '''
+    cnt = 0
+    for data in passport_data:
+        res = d4p1(data, process_single=True)
+        if res:
+            check_sum = all(req(res[cat]) for cat, req in requirements.items())
+            cnt += 1 if check_sum else 0
+
+    return cnt
+
+
+# Test
+# print(d4p1(day_4_test[0], process_single=True))
+# print(d4p2(day_4_test))
+# Validate
+print(d4p2(day_4_input))
