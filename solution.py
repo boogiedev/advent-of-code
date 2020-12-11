@@ -146,4 +146,59 @@ def d2p2(password_report) -> int:
 # Test
 # print(d2p2(day_2_test))
 # Validate
-print(d2p2(day_2_input))
+# print(d2p2(day_2_input))
+
+
+
+day_3_input = get_day_input(3)
+'''
+--- Day 3 Part 1: Toboggan Trajectory ---
+'''
+
+def d3p1(toboggan_map:list, r:int=3, d:int=1, l:int=0, u:int=0) -> int:
+    '''
+    You start on the open square (.) in the top-left corner and need to reach the bottom (below the bottom-most row on your map).
+
+    The toboggan can only follow a few specific slopes (you opted for a cheaper model that prefers rational numbers); start by counting all the trees you would encounter for the slope right 3, down 1:
+
+    From your starting position at the top-left, check the position that is right 3 and down 1. Then, check the position that is right 3 and down 1 from there, and so on until you go past the bottom of the map.
+    '''
+    if type(toboggan_map) == str:
+        toboggan_map = toboggan_map.split()
+
+    move = lambda x, y: (x + (r - l), y + (d - u))
+    tree_cnt = 0
+    x, y = 0, 0
+
+    max_x, max_y = len(toboggan_map[0]), len(toboggan_map)
+
+    while (y < max_y):
+        row = toboggan_map[y] * (y + 1)
+        cur = row[x]
+
+
+        tree_cnt += 1 if cur == '#' else 0
+
+        x, y = move(x, y)
+
+    return tree_cnt
+
+
+
+day_3_test = '''..##.........##.........##.........##.........##.........##.......
+#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..
+.#....#..#..#....#..#..#....#..#..#....#..#..#....#..#..#....#..#.
+..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#
+.#...##..#..#...##..#..#...##..#..#...##..#..#...##..#..#...##..#.
+..#.##.......#.##.......#.##.......#.##.......#.##.......#.##.....
+.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#
+.#........#.#........#.#........#.#........#.#........#.#........#
+#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...
+#...##....##...##....##...##....##...##....##...##....##...##....#
+.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#'''
+
+
+# Test
+# print(d3p1(day_3_test))
+# Validate
+print(d3p1(day_3_input))
