@@ -339,4 +339,100 @@ def d4p2(passport_data:list, requirements:dict=requirement) -> int:
 # print(d4p1(day_4_test[0], process_single=True))
 # print(d4p2(day_4_test))
 # Validate
-print(d4p2(day_4_input))
+# print(d4p2(day_4_input))
+
+
+day_5_input = get_day_input(5)
+'''
+--- Day 5 Part 1: Binary Boarding ---
+'''
+
+def translate_cmd(pass_code:str, row_ranges:range=list(range(128)), col_ranges:range=list(range(8))) -> int:
+    row_cmds = {
+    'F' : lambda row: row[0:len(row)//2],
+    'B' : lambda row: row[len(row)//2:len(row)]
+    }
+    col_cmds = {
+    'L' : lambda col: col[0:len(col)//2],
+    'R' : lambda col: col[len(col)//2:len(col)]
+    }
+    res = None
+    row = None
+    col = None
+
+    for cmd in pass_code:
+        row_cmd = row_cmds.get(cmd)
+        col_cmd = col_cmds.get(cmd)
+
+        if row_cmd:
+            row_ranges = row_cmd(row_ranges)
+        elif col_cmd:
+            col_ranges = col_cmd(col_ranges)
+
+    row = row_ranges[0]
+    col = col_ranges[0]
+    res = (row * 8) + col
+    return res
+
+
+def d5p1(passes:list, return_ids:bool=False) -> int:
+    """
+    The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127). The next letter indicates which half of that region the seat is in, and so on until you're left with exactly one row.
+    """
+
+    res = -1
+    res_id = []
+
+    for mvmt in passes:
+        seat_id = translate_cmd(mvmt)
+        res_id.append(seat_id)
+        res = seat_id if seat_id > res else res
+
+    return res_id if return_ids else res
+
+
+
+day_5_test = ['FBFBBFFRLR']
+# Test
+# print(d5p1(day_5_test))
+# Validate
+# print(d5p1(day_5_input, False))
+
+'''
+--- Day 5 Part 2: Binary Boarding ---
+'''
+
+def d5p2(passes:list) -> int:
+    '''
+    Ding! The "fasten seat belt" signs have turned on. Time to find your seat.
+
+    It's a completely full flight, so your seat should be the only missing boarding pass in your list. However, there's a catch: some of the seats at the very front and back of the plane don't exist on this aircraft, so they'll be missing from your list as well.
+
+    Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
+
+    What is the ID of your seat?
+    '''
+    sorted_id = list(set(d5p1(passes, True)))
+    cur = sorted_id[0]
+    for id in sorted_id:
+        if cur != id:
+            return cur
+        cur += 1
+
+# Validate
+# print(d5p2(day_5_input))
+
+# day_6_input = get_day_input(6)
+'''
+--- Day 6 Part 1: Custom Customs ---
+'''
+
+
+
+
+
+
+
+
+
+#
