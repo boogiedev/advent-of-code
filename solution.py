@@ -340,3 +340,12 @@ def d4p2(passport_data:list, requirements:dict=requirement) -> int:
 # print(d4p2(day_4_test))
 # Validate
 print(d4p2(day_4_input))
+
+
+'''
+--- Day 5 Part 1: Binary Boarding ---
+'''
+
+def d5p1(passport_data:list, requirements:dict=requirement) -> int:
+    '''
+    '''
