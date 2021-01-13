@@ -1,8 +1,24 @@
 Data Science Prep Cheatsheet:
 
 1. Review Basic Models to throw at Data
+  - Supervised Learning
+  - Unsupervised Learning
+  - Reinforcement Learning
+  - Learn to read the outputs of a model and what each metric, hyperparameters, and values mean
+
 2. Review best cleaning methods as well as how to tackle different types of Data
+  - Explain Data Discovery
+
 3. Review Pandas and NumPy commands
-4. 
+4. Master the logistic/linear regression
+5. Review how to setup a DS workspace w/Docker
+6. Review Bayesian Statistics
+7. Review Galvanize study materials
+8. Reivew Probability Models
+9. Hypothesis Testing
+10. A/B Testing
+11. Reivew Distributions and the different types
+12. Bias variance tradeoff, understand why there needs to be a balance of both and what each metric means. Target is for low variance low bias. Bias translates to how close you are to the target while variance is how precise the grouping is
+
 
 Tips and Tricks:
